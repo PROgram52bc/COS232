@@ -1,0 +1,19 @@
+Questions:
+1. 052
+2. 'd'
+3. 100
+4. 0x73
+
+Questions:
+1. In step #1, what happens if you assign y[4] = 0x53; instead?
+	Then the string becomes "TACO5" with an unknown number of garbage characters following it.
+2. In step #2, why is there a null character? We didn’t create one!
+	C-strings in "this form" are automatically null-terminated.
+3. In step #2, why did it work to specify an index of 4 on y2, a character pointer?
+	An array is essentially the pointer containing the address of its first element. And indexing it with [] will advance the pointer and return the content in that address.
+
+Questions:
+1. What is the size of a variable that is a pointer?
+	8 bytes.
+2. When printing the hex value of poof_youre_a_32bit_int, are the bytes the same as the ones you entered manually into y?
+	Yes, but the bytes are reversed.
