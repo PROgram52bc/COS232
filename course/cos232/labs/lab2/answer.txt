@@ -1,0 +1,12 @@
+1. What is the purpose of sending your public key to the instructor?
+For the instructor to send me encrypted messages using the public key that I can then decrypt with my private key.
+2. Why did you not have to enter a password? Can anyone get into your virtual machine?
+Because on my machine, there is the paired private key, and ssh automatically checks if the public key matches the private key.
+3. What is your current username on the remote virtual machine?
+hdeng
+4. Is the output from getent different? How?
+My user name appeared at the end of the list.
+5. Why did we add your username to the sudo group?
+Because then I can use the sudo commands.
+6. What is your current username on the remote virtual machine?
+hdeng
