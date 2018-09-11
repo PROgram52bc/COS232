@@ -1,15 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef unsigned short bool;
+void printUsageAndExit(char* progName) {
+	printf("Usage: %s [-a] [arg1] [arg2] ... \n", progName);
+	exit(1);
+}
+
 int main(int argc, char* argv[]) {
 	if (argc == 1) 
+		printUsageAndExit(argv[0]);
+	int a = 1; // starting argument index
+	bool optionAscii = 0;
+	if (argv[1][0] == '-') // if option provided
 	{
-		printf("Usage: %s [num1] [num2] ... \n", argv[0]);
-		exit(1);
+		if (argc == 2)
+			printUsageAndExit(argv[0]);
+		a = 2;
+		if (argv[1][1] == 'a')
+			optionAscii = 1;
 	}
-	for (int a=1; a<argc; a++)
+
+	for (a; a<argc; a++)
 	{
-		int num = atoi(argv[a]);
+		int num;
+		if (optionAscii) num = argv[a][0]; 
+		else num = atoi(argv[a]);
+		if (num == 0)
+			printUsageAndExit(argv[0]);
+		printf("Ascii value: %c\n", num);
 		printf("Dec value: %d\n", num);
 		printf("Hex value: %x\n", num);
 		printf("Binary representation: \n");
