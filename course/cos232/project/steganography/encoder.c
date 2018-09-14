@@ -62,23 +62,33 @@ int main(int argc, char* argv[]) {
 	for (int i=0;;i++)
 	{
 		// checking conditions for exiting loops
-		if (bitsPerPixel == 32 && (i+1)%4==0) continue; // skip the Alpha byte
 		if (letterIndex > strlen(message)) // when finished reading the string (> because should include the final \0)
 		{
 			break; 
 		}
-		unsigned char mask = 1<<(7-bitCount);
-		unsigned char bit = (message[letterIndex] & mask) >> (7-bitCount); // the bitCount'th bit of the letter. n E {0,1}
+
+		// LSB last
+	//	unsigned char mask = 1<<(7-bitCount);
+	//	unsigned char bit = (message[letterIndex] & mask) >> (7-bitCount); // the bitCount'th bit of the letter. n E {0,1}
+		// LSB first	
+		unsigned char bit = ( (message[letterIndex]>>bitCount)%2)==1;
+
 		unsigned char tmp;
 		if (fread(&tmp, 1, 1, inputFile) != 1) {
 			fprintf(stderr, "Image file terminated before all info are stored.\n");
 			exit(-1);
 		}
+		if (bitsPerPixel == 32 && (i+1)%4==0) 
+		{
+			fwrite(&tmp, 1, 1, outputFile);
+			continue; // skip the Alpha byte
+		}
+		fprintf(stdout, "oldTmp: %x. ", tmp);
 		if (bit) // if should set 1
 			tmp |= 1;
 		else // if should set 0
-			tmp >> 1 << 1;
-		fprintf(stdout, "Writing %hd to file\n", bit);
+			tmp &= ~1;
+		fprintf(stdout, "Writing %hd to file: %x\n", bit, tmp);
 		fwrite(&tmp, 1, 1, outputFile); // parallel writing to output file.
 		// increment counts
 		if (bitCount<7) { 
