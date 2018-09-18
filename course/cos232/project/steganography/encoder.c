@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#define debug 0
 int main(int argc, char* argv[]) {
 	if (argc != 4)
 	{
@@ -78,17 +78,24 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr, "Image file terminated before all info are stored.\n");
 			exit(-1);
 		}
-		if (bitsPerPixel == 32 && (i+1)%4==0) 
+
+		// DETECT alpha byte (skip when there is one)
+	//	if (bitsPerPixel == 32 && (i+1)%4==0) 
+		// SKIP alpha byte (always skip alpha byte)
+		if ((i+1)%4==0)	
+
 		{
 			fwrite(&tmp, 1, 1, outputFile);
 			continue; // skip the Alpha byte
 		}
-		fprintf(stdout, "oldTmp: %x. ", tmp);
+		if (debug)
+			fprintf(stdout, "oldTmp: %x. ", tmp);
 		if (bit) // if should set 1
 			tmp |= 1;
 		else // if should set 0
 			tmp &= ~1;
-		fprintf(stdout, "Writing %hd to file: %x\n", bit, tmp);
+		if (debug)
+			fprintf(stdout, "Writing %hd to file: %x\n", bit, tmp);
 		fwrite(&tmp, 1, 1, outputFile); // parallel writing to output file.
 		// increment counts
 		if (bitCount<7) { 
@@ -97,7 +104,8 @@ int main(int argc, char* argv[]) {
 		else {
 			bitCount = 0;
 			letterIndex++;
-			fprintf(stdout, "\n");
+			if (debug)
+				fprintf(stdout, "\n");
 		}
 
 	}
