@@ -1,0 +1,18 @@
+1. What is stored in the /tmp/passwd file?
+	Hash values that I cannot understand.
+2. What cryptographic hashing algorithm is htpasswd using?
+	MD5 encryption. "This is the default" (Man page of htpasswd)
+3. What is the purpose of the john command? Briefly describe in your own words how it works.
+	It seeks to break easy passwords by attempting combinations and compare with the hash values stored in the file. If they match, it probably means that the password was correct.
+4. Were you able to crack the password? Did the length of the password matter?
+	No for long password, yes for short password. It did matter.
+5. Was the password vulnerable because sha256 is weak or cracked?
+	No.
+6. Why is that password compromised?  Note: see CrackStation’s description (Links to an external site.)Links to an external site. of the word list
+	Because hash values of common words were precomputed and stored remotely, and whenever a short password matches with the precomputed hash value, it is cracked.
+7. Did salting help prevent the password from being cracked? Why or why not?
+	Yes, because it can prevent precomputed values, as well as preventing a single calculation of hash value comparing to a number of password hashes.
+8. In our example, is the password mysupersecretsaltsadsonnysdaughter?
+	No.
+9. If encoding is similar to hashing (and encryption) what is wrong with using it for storing sensitieve information (such as a password)?
+	Encoding has a fixed algorithm back and forth, and as a result, anyone can have access to the algorithm and decode the message; however, unlike encoding, encryption uses a variable (a symmetric/asymmetric key) to encode the information, so that only people with access to such a variable can decode the encrypted message.

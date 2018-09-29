@@ -1,0 +1,26 @@
+1. Briefly, what is the purpose of netcat?
+	The purpose is to send messages and packages through the internet.
+2. We used many arguments with the nc command. Explain each one of them briefly.
+	-t makes it use telnet
+	-l means "listening", someone should be listening before the other connects to that port.
+	-p specifies the port
+3. Briefly, what is the purpose of ngrep?
+	ngrep is the network grep, that fetches information being transmitted based on certain pattern.	
+4. We used many arguments with the ngrep command. Explain each one of them briefly.
+	-q makes it quiet
+	-d makes it listen on eth1 interface
+5. Was Eve able to intercept the encrypted message? Any ideas why?
+	Yes. Because Eve was probably listening directly to Bob's machine.
+6. Does it matter how complex Alice’s password is?
+	No. Because it simply copies everything in plain text and display it on Eve's screen.
+7. What does the pipe operator do?
+	It redirects the output of the previous command to the input of the next command.
+8. Briefly, what is the purpose of mcrypt?
+	It encrypts and decrypts the message sent using a pre-established key.
+9. We used many arguments with the mcrypt command. Explain each one of them briefly. Include a description of how the pipe was used.
+	-k specifies the key that is being used
+	-d makes mcrypt decrypt the message instead of encrypting.
+	echo generates the text message, which is piped to mcrypt, after mcrypt encrypts the message, it pipes the encrypted message to nc to be sent. The similar process happens on the decryption side.
+10. Was Eve able to intercept the encrypted message? Any ideas why?
+	No. Because the message was encrypted, so the keyword "password" did not appear, and was not "grepped" by ngrep.
+

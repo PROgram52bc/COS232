@@ -1,0 +1,25 @@
+1.  How has the ownership and permissions changed?
+	It changed from my user name to root, which has a higher permission.
+2.  Why can supercat read a privileged file when executed by an unprivileged user?
+	Because it has the setuid bit, which gives permission according to the owner instead of the executor.
+3.  What security design principle/s are not followed by supercat?
+	Least previlige and Fail-safe default. Because it gives any user a root privilege by default.
+4.  This activity illustrates a potential vulnerability.
+      What is the vulnerability?
+	That when a file is already open, changing permission of the file doesn't prevent the file from being read. 
+      What CIA principle is at risk?
+	Confidentiality.
+5.  What security design principle has not been followed by the Linux operating system’s file access routines?
+	Complete mediation.
+      How would the behavior need to change to follow this security design principle?
+	Whenever there is a permission change, check the users who are accessing that file if they have the permission to do so.
+6.  If there is a potential vulnerability here, why do you think Linux continues to behave this way?
+	Probably because it was an infrequent situation to have someone changing the permission right away, and it is expensive to check for opened files when the permission changes. 
+7.  Look around (ls, pwd, cd), what do you observe?
+	I see nothing except the copied files and created folders.
+8.  What security design principles are applied with chroot?
+	Separation of mechanisms.
+9.  Can other users visit this folder? Would they be stuck?
+	Yes. I don't think they will be.
+10.  How could chroot jail be used to enhance the security of a system?
+	It can probably be used for a special user that tests dangerous programs. So that critical files don't get lost when accidents happen.
