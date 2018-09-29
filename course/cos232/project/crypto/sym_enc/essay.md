@@ -2,12 +2,14 @@
 
 ## Decryption instruction
 
-1. Pull `passphrase.gpg`, `stanley.jpg.enc` from the repository. 
+1. Pull `passphrase.gpg`, `stanley.jpg.enc` from the repository.
 2. Make sure `gpg` is installed, and that your gpg private key is available on the machine. (Run `gpg --list-secret-keys` to verify)
 3. Run the following command:
-```
-gpg --output stanley.jpg --batch --passphrase-file <(gpg --decrypt passphrase.gpg 2>/dev/null) --decrypt stanley.jpg.enc
-```
+
+    ```
+    gpg --output stanley.jpg --batch --passphrase-file <(gpg --decrypt passphrase.gpg 2>/dev/null) --decrypt stanley.jpg.enc
+    ```
+    
 4. The decrypted file should be available in the current directory, named `stanley.jpg`
 
 ## Questions
