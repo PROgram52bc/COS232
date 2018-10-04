@@ -1,2 +1,2 @@
 target:
-	gcc -g caesar.c -o caesar
+	gcc -Wall -g caesar.c -o caesar

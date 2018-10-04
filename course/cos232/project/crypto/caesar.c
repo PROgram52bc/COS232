@@ -16,38 +16,49 @@ int main(int argc, char** argv) {
 	int shift = 7;
 	FILE* inFile = stdin;
 	int argn = 1; // the argument index to be processed
-	if (argn < argc && argv[argn][0] == '-' && strlen(argv[argn]) == 2 && !isdigit(argv[argn][1])) 
-		// if first argument like -? where ? is not a digit
+	short opt1 = 0,
+		  opt2 = 0,
+		  opt3 = 0; // flag recording if options has been provided
+	while (argn < argc)
 	{
-		switch (argv[argn][1]){
-			case 'e':
-				break;
-			case 'd':
-				mode = 'd';
-				break;
-			default:
-				fprintf(stderr, "Invalid argument: %s\n", argv[argn]);
-				usage(argv[0]);
-		}
-		argn++;
-	}
-	if (argn < argc && atoi(argv[argn]) != 0) // if next argument is a valid number
-	{
-		shift = atoi(argv[argn]) % 26;
-		argn++;
-	}
-	if (argn < argc)
-	{
-		inFile = fopen(argv[argn], "r");
-		if (inFile == NULL) 
+		// if argument like -? where ? is not a digit
+		if (!opt1 && argv[argn][0] == '-' && strlen(argv[argn]) == 2 && !isdigit(argv[argn][1])) 
 		{
-			fprintf(stderr, "Invalid argument: %s\n", argv[argn]);
-			usage(argv[0]);
+			switch (argv[argn][1]) {
+				case 'd':
+					mode = 'd';
+				case 'e':
+					opt1 = 1;
+					break;
+				default:
+					fprintf(stderr, "Invalid option: %s\n", argv[argn]);
+					usage(argv[0]);
+			}
+			argn++;
+			continue;
 		}
-		argn++;
-	}
-	if (argn < argc){
-		fprintf(stderr, "Unprocessed argument: %s\n", argv[argn]);
+		// if argument is a valid number
+		if (!opt2 && atoi(argv[argn]) != 0) 
+		{
+			shift = atoi(argv[argn]) % 26;
+			opt2 = 1;
+			argn++;
+			continue;
+		}
+		// else it has to be a file name
+		if (!opt3)
+		{
+			inFile = fopen(argv[argn], "r");
+			if (inFile == NULL) 
+			{
+				fprintf(stderr, "Invalid file name: %s\n", argv[argn]);
+				usage(argv[0]);
+			}
+			opt3 = 1;
+			argn++;
+			continue;
+		}
+		fprintf(stderr, "Invalid argument: %s\n", argv[argn]);
 		usage(argv[0]);
 	}
 	if (mode == 'd') shift *= -1; // reverse the order if in decrypt mode
@@ -65,6 +76,4 @@ int main(int argc, char** argv) {
 		fwrite(&outChar, 1, 1, stdout);
 	}
 	return 0;
-
-
 }
