@@ -25,4 +25,4 @@
 
 > Should resist brute-force attacks aimed at guessing user passwords
 1. There is no limit or delay in false password attempt, which makes it vulnerable to a brute-force attack.
-	* 
+	* Implement a max-fail attempt check, one can fail a maximum of 3 times within 10 minutes.
