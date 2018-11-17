@@ -24,12 +24,43 @@
 		}
 		else
 		{
+			$userquery = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['username']."'")or die(mysqli_error($DB));
+			$userinfo = mysqli_fetch_assoc($userquery); // get an assoc array for the user
+			// if attempt more than 3 times
+			if ($userinfo["num_attempt"] >= 3) {
+				$previousTime = strtotime($userinfo["false_try_time_stamp"]." UTC");
+				$currentTime = strtotime(time());
+				$diffInSec = $currentTime - $previousTime;
+				// and if 10+ minutes passed since last try, reset num_attempt
+				if ($diffInSec > 10 * 60) {
+					mysqli_query($DB, "UPDATE users SET num_attempt = 0 " .
+						"WHERE username = '" .
+						$userinfo["username"] . 
+					   	"'");
+				}
+				else // if failed 3 times within last 10 minutes, abort
+				{
+					die ("You failed too many times, please retry later.");
+				}
+			}
+
 			while($info = mysqli_fetch_array($check )) 	{
 			 	//gives error if the password is wrong
 				if ($password != $info['pass']) {
+					// update the count
+					mysqli_query($DB, "UPDATE users SET num_attempt = " . 
+						($userinfo["num_attempt"] + 1) . 
+						" WHERE username = '" . 
+						$userinfo["username"] . 
+						"'");
 					die('Incorrect password, please try again.');
 				}
 			}
+			// on success login, reset the num_attempt to 0
+			mysqli_query($DB, "UPDATE users SET num_attempt = 0 " .
+				"WHERE username = '" .
+				$userinfo["username"] . 
+				"'");
 			$hour = time() + 3600; 
 			setcookie('hackme', $_POST['username'], $hour); 
 			setcookie('hackme_pass', $password, $hour);
