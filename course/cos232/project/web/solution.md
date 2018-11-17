@@ -34,3 +34,17 @@
 
 * There is no limit or delay in false password attempt, which makes it vulnerable to a brute-force attack.
 	* Implement a max-fail attempt check, one can fail a maximum of 3 times within 10 minutes.
+
+
+# MILESTONE 2
+
+## Malicious website
+
+I used a fake google page template as the content of the malicious website, where both the buttons (google search and feeling lucky) will send a post request to the hackme server, posting spam message. 
+A victim could have been redirected to the page by pop-ups, substituted browser icon, etc. Victim is extremely likely to be lured because the page just looks like the google page. (Maybe it can be furture changed to look more like it) And most web users (e.g. myself) would not consider clicking on the search button as dangerous, since they do it all the time.
+It can be viewed at [here](https://cse.taylor.edu/~hdeng/google-homepage/csrf.html)
+
+## Fix on the server
+
+I implemented the protection using a hidden token field in the form, whose value is set to the user's hashed password. Whenenver the post request is detected, the server will check that field's value against the user's hashed password in the database, so in the CSRF attack, the attacker would not likely to know the hashed value, thus fail the test.
+

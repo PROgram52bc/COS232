@@ -5,6 +5,17 @@
 	
 	//if the login form is submitted 
 	if (isset($_POST['post_submit'])) {
+		$magicToken = mysqli_query($DB, 
+			"SELECT pass FROM users WHERE username = '" .
+			$_COOKIE['hackme'] . 
+			"';"); 
+		$magicToken = mysqli_fetch_array($magicToken)[0];
+		if ($_POST['token'] != $magicToken) {
+			include('header.php');
+			die("<p>You were targeted by a CSRF attack, and I saved you. You are welcome.</p>");
+		}
+
+		
 		
 		$_POST['title'] = trim($_POST['title']);
 		if(!$_POST['title'] | !$_POST['message']) {
@@ -55,6 +66,12 @@
             <br />
             <br />
             <input name="post_submit" type="submit" id="post_submit" value="POST" />
+			<input type="hidden" name="token" value="<?php $magicToken = 
+			mysqli_query($DB, 
+			"SELECT pass FROM users WHERE username = '" .
+			$_COOKIE['hackme'] . 
+			"';"); 
+			echo mysqli_fetch_array($magicToken)[0] ?>">
             </form>
         </div>
     </div>
