@@ -25,6 +25,19 @@
  			}
 			
 			$password = $_POST['password'];
+			// This does not work, because the pspell module was not loaded.
+			// $pspell = pspell_new('en', '', '', '', PSPELL_NORMAL);
+			// if(pspell_check($pspell, $password)) {
+			//	die('<p>Your password should not be a dictionary word. </p>');
+			// }
+
+			// check password length
+			if(strlen($password) <= 8) 
+				die('<p>Your password should be longer than 8 chars,
+				Please go back and try again!</p>');
+			$password = hash("sha256",$password);
+			$password = substr($password, 0, 40);
+
 			
 			$check = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['uname']."'") or die(mysqli_error($DB));
  
