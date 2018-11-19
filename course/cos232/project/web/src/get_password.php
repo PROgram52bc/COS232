@@ -8,7 +8,7 @@ function getPlainPassWord($encryptedPassword) {
 	$fp = fopen("private.key", "r");
 	$key = fread($fp, 8192);
 	openssl_private_decrypt(base64_decode($encryptedPassword), $plain_pass, $key);
-	var_dump($plain_pass);
+	// var_dump($plain_pass);
 	return $plain_pass;
 }
 ?>
