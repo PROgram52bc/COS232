@@ -25,6 +25,7 @@
  			}
 			
 			$password = $_POST['password'];
+
 			// This does not work, because the pspell module was not loaded.
 			// $pspell = pspell_new('en', '', '', '', PSPELL_NORMAL);
 			// if(pspell_check($pspell, $password)) {
@@ -35,6 +36,19 @@
 			if(strlen($password) <= 8) 
 				die('<p>Your password should be longer than 8 chars,
 				Please go back and try again!</p>');
+
+			$dictionary = fopen("dict.txt", "r");
+			if ($dictionary) {
+				while (($line = fgets($dictionary)) !== false) {
+					$line = trim($line);
+					if (strcmp($line, $password) == 0)
+						die("<p>Password cannot be a dictionary word!</p>");
+				}
+			}
+			else {
+				error_log("Dictionary file not found.", 0);
+			}
+
 			$password = hash("sha256",$password);
 			$password = substr($password, 0, 40);
 
