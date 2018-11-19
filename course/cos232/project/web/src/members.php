@@ -11,8 +11,9 @@
 			die('<p>You did not fill in a required field.
 			Please go back and try again!</p>');
 		}
-		
-		$password = hash("sha256", $_POST['password']);
+		include("get_password.php");
+		$password = getPlainPassWord($_POST['encrypted-password']);
+		$password = hash("sha256", $password);
 		$password = substr($password, 0, 40);
 		
 		$check = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['username']."'")or die(mysqli_error($DB));

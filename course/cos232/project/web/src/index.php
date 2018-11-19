@@ -27,7 +27,7 @@
 			if(!isset($_COOKIE['hackme']))
 				{
 				?>
-	           	<form method="post" action="members.php">
+	           	<form id="userform" method="post" action="members.php">
 				<h2> LOGIN </h2>
 				<table>
 					<tr> <td> Username </td> <td> <input type="text" name="username" /> </td> </tr>
@@ -40,6 +40,7 @@
 					
 			<p></p><p>If you are not a member yet, please click <a href="register.php">here</a> to register.</p>
            <?php
+					include("encrypt_password_field.php");
 				}
 		?>
 	</div>

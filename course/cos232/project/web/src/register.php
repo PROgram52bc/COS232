@@ -23,8 +23,8 @@
  				die('<p>You did not fill in a required field.
 				Please go back and try again!</p>');
  			}
-			
-			$password = $_POST['password'];
+			include ("get_password.php");
+			$password = getPlainPassWord($_POST['encrypted-password']);
 
 			// This does not work, because the pspell module was not loaded.
 			// $pspell = pspell_new('en', '', '', '', PSPELL_NORMAL);
@@ -70,7 +70,7 @@
         <?php
 		}else{
         ?>
-        	<form  method="post" action="register.php">
+        	<form id="userform" method="post" action="register.php">
             <table>
                 <tr>
                     <td> Username </td> 
@@ -95,6 +95,7 @@
             </table>
             </form>
         <?php
+			include("encrypt_password_field.php");
 		}
 		?>
         </div>
