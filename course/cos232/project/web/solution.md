@@ -16,7 +16,7 @@
 
 * There is no length/complexity checking on user password, which makes the system password more vulnerable to brute-force attack.
 	* Check and make sure the password length is greater than 8 chars.
-	* Attempted to do a spell check, but the pspell library was not loaded in the current configuration. 
+	* Do a simple case-insensitive check, refuse any password with only a dictionary word.
 ---
 > If attackers obtain a copy of the database, user passwords should not be easily obtainable
 
@@ -27,6 +27,7 @@
 >	* HTTPS is not an option
 
 * Requests were sent in plain text that is vulnerable to snooping.
+	* Though very ugly, fixed using a client side asymmetric encryption for the password field, which is decrypted on the server side with the private key.
 
 ---
 > Should resist brute-force attacks aimed at guessing user passwords
