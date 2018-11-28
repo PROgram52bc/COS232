@@ -10,7 +10,7 @@
 			$_COOKIE['hackme'] . 
 			"';"); 
 		$magicToken = mysqli_fetch_array($magicToken)[0];
-		if ($_POST['token'] != $magicToken) {
+		if (!array_key_exists('token', $_POST) || $_POST['token'] != $magicToken) {
 			include('header.php');
 			die("<p>You were targeted by a CSRF attack, and I saved you. You are welcome.</p>");
 		}
