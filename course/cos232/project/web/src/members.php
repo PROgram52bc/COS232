@@ -97,19 +97,11 @@
 		<div class="post-bgbtm">
         <h2 class = "title">hackme bulletin board</h2>
         	<?php
-            if(!isset($_COOKIE['hackme'])){
+			include('check_logged_in.php');
+			if(!logged_in($DB)){
 				 die('Why are you not logged in?!');
 			}else
 			{
-				// check if the user exists in database and if the password in cookie is correct
-				$userquery = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."'") or die(mysqli_error($DB));
-				// assuming there is only one result with one username
-				$userinfo = mysqli_fetch_assoc($userquery); // get an assoc array for the user
-				// if the user doesn't exist in database OR
-				// if there is no password hash in the cookie OR
-				// if the password hash is not correct
-				if ($userinfo == null || !isset($_COOKIE['hackme_pass']) || $userinfo["pass"] != $_COOKIE['hackme_pass']) die("<p>Sorry, invalid credentials.</p>");
-
 				print("<p>Logged in as <a>$_COOKIE[hackme]</a></p>");
 			}
 			?>

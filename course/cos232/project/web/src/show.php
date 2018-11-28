@@ -3,12 +3,28 @@
 	include('connect.php');
 	$DB = connect(); 
 	$stmt = mysqli_stmt_init($DB);
-
 	
 	//if the login form is submitted 
 	if (!isset($_GET['pid'])) {
-		
 		if (isset($_GET['delpid'])){
+			// get the username of the post
+			mysqli_stmt_prepare($stmt, "SELECT username FROM threads WHERE id = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $_GET['delpid']) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+			$username = mysqli_stmt_get_result($stmt);
+			$username = mysqli_fetch_array($username)['username'];
+
+			// get the correct credential of that user
+			mysqli_stmt_prepare($stmt, "SELECT pass FROM users WHERE username = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $username) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+			$pass = mysqli_stmt_get_result($stmt);
+			$pass = mysqli_fetch_array($pass)['pass'];
+
+			// compare the credential against the current user's cookies
+			// if no user found OR if password cookie not set OR if cookie in password doesn't match password in database
+			if (!$username || !isset($_COOKIE['hackme_pass']) || $pass != $_COOKIE['hackme_pass'])
+				die("Only user who posted the thread can delete it.");
 			mysqli_stmt_prepare($stmt, "DELETE FROM threads WHERE id = ?") &&
 				mysqli_stmt_bind_param($stmt, "s", $_GET['delpid']) &&
 				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
@@ -24,7 +40,8 @@
 <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
 <?php
 	include('header.php');
-	if(!isset($_COOKIE['hackme'])){
+	include('check_logged_in.php');
+	if(!logged_in($DB)){
 		 die('Why are you not logged in?!');
 	}else
 	{

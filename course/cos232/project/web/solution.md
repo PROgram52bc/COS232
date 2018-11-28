@@ -8,6 +8,8 @@
 
 * No, if user has a cookie of 'hackme' set, they will be permitted to act as users already logged in.
 	* Check if the 'hackme' field of the cookie correspond to an actual username in the database, and whether the 'hackme\_pass' in the cookie correspond to the correct password in the DB.
+* Users that are not logged in (and user who did not post a thread) can delete a thread through the GET api call.
+	* Fixed using more rigorous checking to ensure: 1. the user is logged in; 2. the user logged in is the one who posted the thread.
 
 ---
 > Should enforce a strong password scheme, including at minimum:
