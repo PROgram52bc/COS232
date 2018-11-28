@@ -1,13 +1,13 @@
 # MILESTONE 1
 
-## Already implemented protection mechanisms
+## Vulnerablilities and improvements
+
 ---
 
 > Messages, including the title of a post, should: only be viewable by registered users, only be submitted by registered users, only be deleted by registered users.
 
-* Yes. There is a mechanism in the php that hides info and restricts operations from unregistered user.
-
-## Vulnerablilities and improvements
+* No, if user has a cookie of 'hackme' set, they will be permitted to act as users already logged in.
+	* Check if the 'hackme' field of the cookie correspond to an actual username in the database, and whether the 'hackme\_pass' in the cookie correspond to the correct password in the DB.
 
 ---
 > Should enforce a strong password scheme, including at minimum:
