@@ -23,7 +23,9 @@
 			die('<p>You did not fill in a required field.
 			Please go back and try again!</p>');
 		}
-		
+		// sanitize user input, strip out all html tags
+		$_POST['title'] = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+		$_POST['message'] = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
 		mysqli_query($DB, "INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', '".time()."')")or die(mysqli_error($DB));
 		
 		header("Location: members.php");

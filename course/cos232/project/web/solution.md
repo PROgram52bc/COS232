@@ -58,3 +58,7 @@ I made a pseudo-server with a subdirectory called `xss\_server` in the `src` fol
 * `database.txt` stores all the credentials stolen, 
 * `collector.php` is the server receiving requests with user credentials, and
 * `malicious_message.txt` is the message payload to be posted on the bulletin board.
+
+## Fix on the server
+
+I used a simple input sanitization to strip out all html tags. Now the previous attack would not work, since the `<script>` tags were removed from the user input and all the statements will be displayed instead of being interpreted by javascript on the victim's browser.
