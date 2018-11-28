@@ -48,3 +48,13 @@ It can be viewed at [here](https://cse.taylor.edu/~hdeng/google-homepage/csrf.ht
 
 I implemented the protection using a hidden token field in the form, whose value is set to the user's hashed password. Whenenver the post request is detected, the server will check that field's value against the user's hashed password in the database, so in the CSRF attack, the attacker would not likely to know the hashed value, thus fail the test.
 
+# MILESTONE 3
+
+## Malicious message
+
+I constructed a malicious message payload with `<script>` tags that uses javascript to send the user's cookies with an ajax request to a remote server. Since the cookie is hashed, the credential password stolen cannot be used as the login password directly; however, an attacker might set his/her own cookie with the stolen credential thus log in as the victim user.
+
+I made a pseudo-server with a subdirectory called `xss\_server` in the `src` folder. There are three files: 
+* `database.txt` stores all the credentials stolen, 
+* `collector.php` is the server receiving requests with user credentials, and
+* `malicious_message.txt` is the message payload to be posted on the bulletin board.
