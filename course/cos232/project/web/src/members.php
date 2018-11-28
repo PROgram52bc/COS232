@@ -2,6 +2,7 @@
 	// Connects to the Database 
 	include('connect.php');
 	$DB = connect();
+	$stmt = mysqli_stmt_init($DB);
 	
 	//if the login form is submitted 
 	if (isset($_POST['submit'])) {
@@ -16,7 +17,13 @@
 		$password = hash("sha256", $password);
 		$password = substr($password, 0, 40);
 		
-		$check = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['username']."'")or die(mysqli_error($DB));
+		// using prepared statement
+		mysqli_stmt_prepare($stmt, "SELECT * FROM users WHERE username = ?") &&
+			mysqli_stmt_bind_param($stmt, "s", $_POST['username']) &&
+			mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+		$check = mysqli_stmt_get_result($stmt);
+		// using string concatination
+		// $check = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['username']."'")or die(mysqli_error($DB));
 		
  		//Gives error if user already exist
  		$check2 = mysqli_num_rows($check);
@@ -25,15 +32,20 @@
 		}
 		else
 		{
-			$userquery = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['username']."'")or die(mysqli_error($DB));
+			mysqli_stmt_prepare($stmt, "SELECT * FROM users WHERE username = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $_POST['username']) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+			$userquery = mysqli_stmt_get_result($stmt);
 			$userinfo = mysqli_fetch_assoc($userquery); // get an assoc array for the user
 			// if attempt more than 3 times
 			if ($userinfo["num_attempt"] >= 3) {
 				$previousTime = strtotime($userinfo["false_try_time_stamp"]." UTC");
-				$currentTime = strtotime(time());
+				$currentTime = time();
 				$diffInSec = $currentTime - $previousTime;
+				
 				// and if 10+ minutes passed since last try, reset num_attempt
 				if ($diffInSec > 10 * 60) {
+					// safe from SQL injection, because $userinfo["username"] is a result of safe sql query.
 					mysqli_query($DB, "UPDATE users SET num_attempt = 0 " .
 						"WHERE username = '" .
 						$userinfo["username"] . 
@@ -49,6 +61,7 @@
 			 	//gives error if the password is wrong
 				if ($password != $info['pass']) {
 					// update the count
+					// safe from SQL injection, because $userinfo["username"] is a result of safe sql query.
 					mysqli_query($DB, "UPDATE users SET num_attempt = " . 
 						($userinfo["num_attempt"] + 1) . 
 						" WHERE username = '" . 
@@ -58,6 +71,7 @@
 				}
 			}
 			// on success login, reset the num_attempt to 0
+			// safe from SQL injection, because $userinfo["username"] is a result of safe sql query.
 			mysqli_query($DB, "UPDATE users SET num_attempt = 0 " .
 				"WHERE username = '" .
 				$userinfo["username"] . 

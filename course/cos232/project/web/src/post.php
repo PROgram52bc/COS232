@@ -2,13 +2,14 @@
 // Connects to the Database 
 	include('connect.php');
 	$DB = connect();
+	$stmt = mysqli_stmt_init($DB);
 	
 	//if the login form is submitted 
 	if (isset($_POST['post_submit'])) {
-		$magicToken = mysqli_query($DB, 
-			"SELECT pass FROM users WHERE username = '" .
-			$_COOKIE['hackme'] . 
-			"';"); 
+		mysqli_stmt_prepare($stmt, "SELECT pass FROM users WHERE username = ?") &&
+			mysqli_stmt_bind_param($stmt, "s", $_COOKIE['hackme']) &&
+			mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+		$magicToken = mysqli_stmt_get_result($stmt);
 		$magicToken = mysqli_fetch_array($magicToken)[0];
 		if (!array_key_exists('token', $_POST) || $_POST['token'] != $magicToken) {
 			include('header.php');
@@ -26,7 +27,9 @@
 		// sanitize user input, strip out all html tags
 		$_POST['title'] = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
 		$_POST['message'] = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
-		mysqli_query($DB, "INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', '".time()."')")or die(mysqli_error($DB));
+		mysqli_stmt_prepare($stmt, "INSERT INTO threads (username, title, message, date) VALUES(?,?,?,?)") &&
+			mysqli_stmt_bind_param($stmt, "sssd", $_COOKIE['hackme'], $_POST['title'], $_POST[message], time()) &&
+			mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
 		
 		header("Location: members.php");
 	}
@@ -50,7 +53,10 @@
 			}else
 			{
 				// check if the user exists in database and if the password in cookie is correct
-				$userquery = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."'") or die(mysqli_error($DB));
+				mysqli_stmt_prepare($stmt, "SELECT * FROM users WHERE username = ?") &&
+					mysqli_stmt_bind_param($stmt, "s", $_COOKIE['hackme']) &&
+					mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+				$userquery = mysqli_stmt_get_result($stmt);
 				// assuming there is only one result with one username
 				$userinfo = mysqli_fetch_assoc($userquery); // get an assoc array for the user
 				// if the user doesn't exist in database OR
@@ -76,11 +82,11 @@
             <br />
             <br />
             <input name="post_submit" type="submit" id="post_submit" value="POST" />
-			<input type="hidden" name="token" value="<?php $magicToken = 
-			mysqli_query($DB, 
-			"SELECT pass FROM users WHERE username = '" .
-			$_COOKIE['hackme'] . 
-			"';"); 
+			<input type="hidden" name="token" value="<?php 
+			mysqli_stmt_prepare($stmt, "SELECT pass FROM users WHERE username = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $_COOKIE['hackme']) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+			$magicToken = mysqli_stmt_get_result($stmt);
 			echo mysqli_fetch_array($magicToken)[0] ?>">
             </form>
         </div>

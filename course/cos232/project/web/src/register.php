@@ -8,6 +8,7 @@
 	include('connect.php');
 	include('header.php');
 	$DB = connect();
+	$stmt = mysqli_stmt_init($DB);
 ?>
 <div class="post">
 	<div class="post-bgtop">
@@ -53,7 +54,10 @@
 			$password = substr($password, 0, 40);
 
 			
-			$check = mysqli_query($DB, "SELECT * FROM users WHERE username = '".$_POST['uname']."'") or die(mysqli_error($DB));
+			mysqli_stmt_prepare($stmt, "SELECT * FROM users WHERE username = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $_POST['uname']) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+			$check = mysqli_stmt_get_result($stmt);
  
  		//Gives error if user already exist
  		$check2 = mysqli_num_rows($check);
@@ -62,7 +66,10 @@
 		}
 		else
 		{
-			mysqli_query($DB, "INSERT INTO users (username, pass, fname, lname) VALUES ('".$_POST['uname']."', '". $password ."', '". $_POST['fname']."', '". $_POST['lname'] ."');")or die(mysqli_error());
+
+		mysqli_stmt_prepare($stmt, "INSERT INTO users (username, pass, fname, lname) VALUES(?,?,?,?)") &&
+			mysqli_stmt_bind_param($stmt, "ssss", $_POST['uname'], $password, $_POST['fname'], $_POST['lname']) &&
+			mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
 			
 			echo "<h3> Registration Successful!</h3> <p>Welcome ". $_POST['fname'] ."! Please log in...</p>";
 		} 

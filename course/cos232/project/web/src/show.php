@@ -2,12 +2,16 @@
 	// Connects to the Database 
 	include('connect.php');
 	$DB = connect(); 
+	$stmt = mysqli_stmt_init($DB);
+
 	
 	//if the login form is submitted 
 	if (!isset($_GET['pid'])) {
 		
 		if (isset($_GET['delpid'])){
-			mysqli_query($DB, "DELETE FROM threads WHERE id = '".$_GET['delpid']."'") or die(mysqli_error($DB));
+			mysqli_stmt_prepare($stmt, "DELETE FROM threads WHERE id = ?") &&
+				mysqli_stmt_bind_param($stmt, "s", $_GET['delpid']) &&
+				mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
 		}
 			header("Location: members.php");
 	}
@@ -28,7 +32,10 @@
 	}
 ?>
 <?php
-	$threads = mysqli_query($DB, "SELECT * FROM threads WHERE id = '".$_GET['pid']."'") or die(mysqli_error($DB));
+	mysqli_stmt_prepare($stmt, "SELECT * FROM threads WHERE id = ?") &&
+		mysqli_stmt_bind_param($stmt, "s", $_GET['pid']) &&
+		mysqli_stmt_execute($stmt) || die(mysqli_stmt_error($stmt));
+	$threads = mysqli_stmt_get_result($stmt);
 	while($thisthread = mysqli_fetch_array( $threads )){
 ?>
 	<div class="post">
