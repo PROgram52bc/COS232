@@ -87,4 +87,4 @@ The `%23` is a sharp symbol meant to comment out the last single quote in the se
 
 ## Fix on the server
 
-
+I fixed the issue with constructing a 'prepared' query statement. The statement is first compiled and executed and cached without the parameters given by the user (potentially malicious), and the input is plugged in at the end as it is rather than being interpreted as part of the SQL command.
